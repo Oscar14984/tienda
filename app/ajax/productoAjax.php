@@ -10,11 +10,11 @@
         $insUsuario = new productosController();
 
         if ($_POST['producto_id'] == "eliminar") {
-            echo $insUsuario->eliminar();
+            //echo $insUsuario->eliminar();
         }
 
         if ($_POST['producto_id'] == "editar") {
-            echo $insUsuario->editar();
+            //echo $insUsuario->editar();
         }
 
 

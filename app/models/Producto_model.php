@@ -41,17 +41,11 @@
 
         //get_all_products(): Devuelve todos los productos.
         public function  get_all_products() {
-            $consulta = "SELECT * FROM productos";
-            $sql = $this->conectar()->prepare($consulta);
+            $query = "SELECT * FROM productos";
+            $sql = $this->conectar()->prepare($query);
             $sql->execute();
             return $sql;
         }
-
-        // protected function ejecutarConsulta($consulta){
-        //     $sql = $this->conectar()->prepare($consulta);
-        //     $sql->execute();
-        //     return $sql;
-        // }
 
         // get_product_by_id($id): Devuelve los detalles de un producto por su ID.
         public function get_product_by_id($id){
