@@ -21,7 +21,7 @@
         protected function getViewModel($view) {
             // redirecciona a dashboard si se pone index
 
-            $pages = ["dashboard","update-view"];
+            $pages = ["dashboard","update"];
 
             if (in_array($view, $pages)){
                 if(is_file("./app/views/content/".$view."-view.php")){
@@ -49,7 +49,10 @@
 
         // get_product_by_id($id): Devuelve los detalles de un producto por su ID.
         public function get_product_by_id($id){
-
+            $query = "SELECT * FROM productos WHERE id=$id";
+            $sql = $this->conectar()->prepare($query);
+            $sql->execute();
+            return $sql;
         }
         // create_product($data): Inserta un nuevo producto en la base de datos.
         public function create_product($data) {
@@ -85,8 +88,29 @@
             
         }
 
-        public function update_product($id, $data){
+        public function update_product($data, $id){
+            $query="UPDATE productos SET ";
+            
+            $C=0;
+            foreach ($data AS $clave) {
+                if($C>=1){ $query.= ","; }
+                $query.=$clave["campo_nombre"]."=".$clave["campo_marcador"];
+                $C++;
+            }
 
+            $query.=" WHERE ".$id["condicion_campo"]."=".$id["condicion_marcador"];
+
+            $sql=$this->conectar()->prepare($query);
+
+            foreach ($data AS $clave) {
+                $sql->bindParam($clave["campo_marcador"],$clave["campo_valor"]);
+            }
+
+            $sql->bindParam($id["condicion_marcador"],$id["condicion_valor"]);
+
+            $sql->execute();
+            
+            return $sql;
         }
 
         // update_product($id, $data): Actualiza los detalles de un producto.

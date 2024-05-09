@@ -4,6 +4,7 @@
 
     class viewController extends Producto_model {
         public function getViewController($view){
+            //si la vista es diferente de ""
             if($view != ""){
                 $response= $this->getViewModel($view);
             }else {

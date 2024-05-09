@@ -21,6 +21,7 @@
         <?php 
             use app\controllers\viewController;
 
+            //Objeto que hereda los metodos de PrductsController
             $viewsController = new viewController();
 
             $view = $viewsController->getViewController($url[0]);
@@ -28,7 +29,6 @@
             if ($view=="dashboard" || $view=="404") {
                 require_once "./app/views/content/".$view."-view.php";
             } else {
-                
                 require_once $view;
             }
 

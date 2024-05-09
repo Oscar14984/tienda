@@ -36,7 +36,7 @@
 								<td>'.$rows['precio'].'</td>
 								<td>$'.$rows['cantidad'].'</td>
 								<td>
-									<a href="'.APP_URL.'update-view/'.$rows['id'].'/" class="button is-success is-rounded is-small">Actualizar</a>
+									<a href="'.APP_URL.'update/'.$rows['id'].'/" class="button is-success is-rounded is-small">Actualizar</a>
 								</td>
 								<td>
 									<form class="FormularioAjax" action="'.APP_URL.'app/ajax/productosAjax.php" method="POST" autocomplete="off">
@@ -59,7 +59,90 @@
 			return $table;
         }
 
-		// public function editar(){
+		public function editar($id){
 
-		// }
+			//obtengo la data desde el modelo Productos
+			$data = $this->get_product_by_id($id); 
+
+			// si no hay registros no existe el producto
+			if($data->rowCount()<=0){
+		        $alert=[
+					"tipo"=>"simple",
+					"titulo"=>"Ocurrió un error inesperado",
+					"texto"=>"El id del producto no se encuatra en el sistema",
+					"icono"=>"error"
+				];
+				return json_encode($alert);
+		        exit();
+		    }else{
+				//este fetch no es necesario
+		    	$data=$data->fetch();
+
+				# Almacenamos datos enviados por el formulario #
+				$nombre=$_POST['nombre'];
+				$descripcion=$_POST['descripcion'];
+				$precio=$_POST['precio'];
+				$cantidad=$_POST['cantidad'];
+		    }
+
+			# Verificando campos obligatorios #
+            if($descripcion=="" || $cantidad =="" || $precio==""){
+		    	$alert=[
+					"tipo"=>"simple",
+					"titulo"=>"Ocurrió un error inesperado",
+					"texto"=>" Alguno de los campos esta vacio ",
+					"icono"=>"error"
+				];
+				return json_encode($alert);
+		        exit();
+		    }
+
+
+			$data_update =[
+				[
+					"campo_nombre"=>"nombre",
+					"campo_marcador"=>":Nombre",
+					"campo_valor"=>$nombre
+				],
+				[
+					"campo_nombre"=>"descripcion",
+					"campo_marcador"=>":Descripcion",
+					"campo_valor"=>$descripcion
+				],
+				[
+					"campo_nombre"=>"precio",
+					"campo_marcador"=>":Precio",
+					"campo_valor"=>$precio
+				],
+				[
+					"campo_nombre"=>"cantidad",
+					"campo_marcador"=>":Cantidad",
+					"campo_valor"=>$cantidad
+				],
+			];
+			
+			$id_condition =[
+				"condicion_campo"=>"id",
+				"condicion_marcador"=>":ID",
+				"condicion_valor"=>$id
+				
+			];
+
+			if ($this->update_product($data_update, $id_condition)){
+				$alert=[
+					"tipo"=>"recargar",
+					"titulo"=>"Usuario Actualizadp",
+					"texto"=>"El producto ".$data['nombre']." se actulizo con exito" ,
+					"icono"=>"success"
+				];
+			}else{
+				$alert=[
+					"tipo"=>"simple",
+					"titulo"=>"Ocurrió un error inesperado",
+					"texto"=>"No se pudo actulizar el producto por favor intente nuevamente",
+					"icono"=>"error"
+				];
+			}
+			return json_encode($alert);
+		}
     }
