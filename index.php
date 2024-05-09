@@ -1,44 +1,39 @@
 <?php
     require_once "./config/app.php"; //archivo con información basica del sitio (titulo, nombre, nombre de sesion)
     require_once "./autoload.php"; // Archivo que carga automaticamentes el archivo que necesita
-    require_once "./app/views/inc/session_start.php"; // Asigna el nombre de sesión y la inicia
+    require_once "./app/views/templates/session_start.php"; // Asigna el nombre de sesión y la inicia
 
+    //obtengo el nombre de la vista desde la URL 
     if( isset($_GET['views'] )) {
         $url = explode("/",$_GET['views']);
     } else {
-        $url=["login"];
+        $url=["dashboard"];
     }
 ?>
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <?php require_once "./app/views/inc/head.php"?>
+        <?php require_once "./app/views/templates/head.php"?>
     </head>
 
     <body>
+        <!-- <h1><?php //echo $url[0]?></h1> -->
         <?php 
-            use app\controllers\viewsController;
-            use app\controllers\loginController;
+            use app\controllers\viewController;
 
-            $insLogin = new loginController(); //isntancia del  
-            $viewsController = new viewsController();
+            $viewsController = new viewController();
 
-            $vista = $viewsController->obtenerVistasControlador($url[0]);
+            $view = $viewsController->getViewController($url[0]);
             
-            if ($vista=="login" || $vista=="404") {
-                require_once "./app/views/content/".$vista."-view.php";
+            if ($view=="dashboard" || $view=="404") {
+                require_once "./app/views/content/".$view."-view.php";
             } else {
-
-                # Cerrar sesion (filtro de seguridad para no navegar entre pestañas)#
-                if( !isset($_SESSION['id']) || !isset($_SESSION['nombre']) || !isset($_SESSION['usuario']) || $_SESSION['id'] == "" ||$_SESSION['nombre'] == "" || $_SESSION['usuario'] == "" )
-                {
-                    $insLogin->cerrarSesionControlador();
-                    exit();
-                }
-                require_once "./app/views/inc/navbar.php";
-                require_once $vista;
+                
+                require_once $view;
             }
-            require_once "./app/views/inc/script.php";
+
+            require_once "./app/views/templates/script.php";
+            
         ?>
     </body>
 </html>

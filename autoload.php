@@ -2,9 +2,9 @@
     spl_autoload_register(
         function($clase)
         {
-            // __DIR__ (obtiene la ruta absoluta del directorio actual donde se ejecuta este archivo)
+            //Se obtiene la ruta absoluta del directorio actual donde se ejecuta este archivo)
             $archivo = __DIR__."/".$clase.".php"; 
-            $archivo=str_replace("\\","/",$archivo); //para sistemas linux ya que no admiten \\ en sus rutas
+            $archivo=str_replace("\\","/",$archivo); 
 
             if(is_file($archivo)){
                 require_once $archivo;
